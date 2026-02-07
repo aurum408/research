@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Анкетные данные</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 30px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: bold;
+  background: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+
+.submit-btn:hover {
+  background: #4CAF50;
+}
+
+.note {
+  font-size: 13px;
+  color: #666;
+  margin-top: 15px;
+  text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Анкетные данные</h2>
+
+  <form action="instruction.html" method="GET">
+
+    <div class="form-group">
+      <label for="gender">Пол</label>
+      <select id="gender" name="gender" required>
+        <option value="">Выберите…</option>
+        <option value="male">Мужской</option>
+        <option value="female">Женский</option>
+
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="age">Возраст</label>
+      <input type="number" id="age" name="age" min="18" max="100" required>
+    </div>
+
+    <div class="form-group">
+      <label for="job">Профессия</label>
+      <input type="text" id="job" name="job" placeholder="Например: студент, дизайнер" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="example@mail.com" required>
+    </div>
+
+    <button type="submit" class="submit-btn">
+      Дальше →
+    </button>
+
+    <div class="note">
+      Данные используются только в исследовательских целях
+    </div>
+
+  </form>
+</div>
+
+</body>
+</html>
