@@ -137,6 +137,45 @@ h2 {
   color: #555;
 }
 
+/пропущенные шкалы/
+.scale-row.missing {
+  background: #fff3f3;
+  border-left: 4px solid #e53935;
+  padding-left: 8px;
+  border-radius: 6px;
+}
+
+/сообщение о том что не все шкалы заполнены/
+.fill-notice {
+  display: none;
+  margin: 20px 0;
+  padding: 14px;
+  background: #fff8e1;
+  border-left: 5px solid #f9a825;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #555;
+}
+
+.center-notice {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff8e1;
+  border-left: 6px solid #f9a825;
+  padding: 18px 22px;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #444;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  z-index: 20000;
+  display: none;
+  max-width: 320px;
+  text-align: center;
+}
+
+
   .submit-btn {
   display: block;
   width: 100%;
@@ -175,6 +214,12 @@ h2 {
 </head>
 
 <body>
+
+<!-- сообщение о том что не все заполнено -->
+<div id="centerNotice" class="center-notice">
+  Пожалуйста, заполните все шкалы перед продолжением
+</div>
+
 
 <!-- ПЛАШКА -->
 <div id="rotateOverlay">
@@ -263,9 +308,10 @@ scales.map((s,i)=>`
 );
 </script>
 
-  <button type="submit" class="submit-btn">
+<button type="button" class="submit-btn" onclick="checkScales()">
   Отправить ответы
 </button>
+
 
 </form>
 </div>
@@ -281,6 +327,67 @@ function updateOrientation() {
 
 updateOrientation();
 window.addEventListener("resize", updateOrientation);
+</script>
+
+
+<script>
+let noticeTimer = null;
+
+function showNotice() {
+  const notice = document.getElementById("centerNotice");
+  notice.style.display = "block";
+
+  // сброс таймера, если уже был
+  if (noticeTimer) clearTimeout(noticeTimer);
+
+  noticeTimer = setTimeout(() => {
+    notice.style.display = "none";
+  }, 2500);
+}
+
+function hideNotice() {
+  const notice = document.getElementById("centerNotice");
+  notice.style.display = "none";
+  if (noticeTimer) clearTimeout(noticeTimer);
+}
+
+function checkScales() {
+  const rows = document.querySelectorAll(".scale-row");
+  let firstMissing = null;
+  let allFilled = true;
+
+  rows.forEach(row => {
+    const name = row.querySelector("input").name;
+    const checked = document.querySelector(`input[name="${name}"]:checked`);
+
+    if (!checked) {
+      row.classList.add("missing");
+      allFilled = false;
+      if (!firstMissing) firstMissing = row;
+    } else {
+      row.classList.remove("missing");
+    }
+  });
+
+  if (!allFilled) {
+    showNotice();
+
+    firstMissing.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+    return;
+  }
+
+  window.location.href = "thankyou.html"; /здесь поменять ссылку/
+}
+
+/* Скрывать сообщение при любом выборе */
+document.addEventListener("change", function(e) {
+  if (e.target.type === "radio") {
+    hideNotice();
+  }
+});
 </script>
 
 

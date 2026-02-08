@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Анкетные данные</title>
+<title>Анкета участника</title>
 
 <style>
 body {
@@ -18,43 +18,36 @@ body {
   max-width: 500px;
   margin: auto;
   background: #fff;
-  padding: 25px;
-  border-radius: 12px;
+  padding: 30px;
+  border-radius: 14px;
 }
 
 h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
   text-align: center;
-  margin-bottom: 25px;
-}
-
-.form-group {
-  margin-bottom: 18px;
 }
 
 label {
   display: block;
-  font-weight: bold;
-  margin-bottom: 6px;
+  margin-top: 15px;
+  font-size: 14px;
 }
 
 input, select {
   width: 100%;
-  padding: 12px;
-  font-size: 15px;
+  margin-top: 6px;
+  padding: 10px;
+  font-size: 14px;
   border-radius: 6px;
   border: 1px solid #ccc;
   box-sizing: border-box;
 }
 
-input:focus, select:focus {
-  outline: none;
-  border-color: #4CAF50;
-}
-
 .submit-btn {
   width: 100%;
   margin-top: 30px;
-  padding: 16px;
+  padding: 15px;
   font-size: 16px;
   font-weight: bold;
   background: #4CAF50;
@@ -64,16 +57,49 @@ input:focus, select:focus {
   cursor: pointer;
 }
 
-
 .submit-btn:hover {
-  background: #4CAF50;
+  background: #43A047;
 }
 
-.note {
+/* ===== Повторное участие ===== */
+.repeat-check label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  gap: 6px;
+  margin-top: 0;
+  font-weight: normal;
+}
+
+.repeat-check input[type="checkbox"] {
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  position: relative;
+  top: 1px;
+}
+
+.repeat-hint {
+  display: none;
+  margin-top: 10px;
+  padding: 12px;
+  background: #fff8e1;
+  border-left: 4px solid #f9a825;
+  border-radius: 6px;
   font-size: 13px;
-  color: #666;
-  margin-top: 15px;
-  text-align: center;
+  color: #444;
+}
+
+/* ===== Ошибки ===== */
+.input-error {
+  border: 2px solid #e53935;
+}
+
+.error-message {
+  color: #e53935;
+  font-size: 12px;
+  margin-top: 4px;
+  display: none;
 }
 </style>
 </head>
@@ -81,45 +107,113 @@ input:focus, select:focus {
 <body>
 
 <div class="container">
-  <h2>Анкетные данные</h2>
+  <h2>Анкета участника</h2>
 
-  <form action="instruction.html" method="GET">
+  <form id="participantForm" novalidate>
+    <!-- Галочка повторного участия -->
+    <div class="repeat-check">
+      <label>
+        <input type="checkbox" id="alreadyDone">
+        Я уже участвовал(а) в этом исследовании
+      </label>
 
-    <div class="form-group">
+      <div id="repeatHint" class="repeat-hint">
+        Пожалуйста, укажите тот же e-mail, который вы использовали ранее.
+      </div>
+    </div>
+
+    <!-- Основные поля анкеты -->
+    <div id="mainFields">
       <label for="gender">Пол</label>
-      <select id="gender" name="gender" required>
-        <option value="">Выберите…</option>
+      <select id="gender" name="gender">
+        <option value="">Выберите</option>
         <option value="male">Мужской</option>
         <option value="female">Женский</option>
-
       </select>
-    </div>
+      <div class="error-message" id="genderError">Пожалуйста, выберите пол.</div>
 
-    <div class="form-group">
       <label for="age">Возраст</label>
-      <input type="number" id="age" name="age" min="18" max="100" required>
-    </div>
+      <input type="number" id="age" name="age" min="14" max="99">
+      <div class="error-message" id="ageError">Пожалуйста, укажите возраст от 14 до 99.</div>
 
-    <div class="form-group">
       <label for="job">Профессия</label>
-      <input type="text" id="job" name="job" placeholder="Например: студент, дизайнер" required>
+      <input type="text" id="job" name="job">
+      <div class="error-message" id="jobError">Пожалуйста, укажите профессию.</div>
     </div>
 
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" placeholder="example@mail.com" required>
-    </div>
+    <!-- Email всегда остаётся -->
+    <label for="email">E-mail</label>
+    <input type="email" id="email" name="email">
+    <div class="error-message" id="emailError">Пожалуйста, введите корректный e-mail.</div>
 
-    <button type="submit" class="submit-btn">
-      Дальше →
-    </button>
-
-    <div class="note">
-      Данные используются только в исследовательских целях
-    </div>
-
+    <button type="submit" class="submit-btn">Продолжить →</button>
   </form>
 </div>
+
+<script>
+const alreadyDone = document.getElementById("alreadyDone");
+const mainFields = document.getElementById("mainFields");
+const repeatHint = document.getElementById("repeatHint");
+const form = document.getElementById("participantForm");
+
+alreadyDone.addEventListener("change", function () {
+  if (this.checked) {
+    mainFields.style.display = "none";
+    repeatHint.style.display = "block";
+    mainFields.querySelectorAll("input, select").forEach(el => el.disabled = true);
+  } else {
+    mainFields.style.display = "block";
+    repeatHint.style.display = "none";
+    mainFields.querySelectorAll("input, select").forEach(el => el.disabled = false);
+  }
+});
+
+form.addEventListener("submit", function(e) {
+  e.preventDefault(); // блокируем стандартную отправку
+  let valid = true;
+
+  // Очистка предыдущих ошибок
+  document.querySelectorAll(".input-error").forEach(el => el.classList.remove("input-error"));
+  document.querySelectorAll(".error-message").forEach(el => el.style.display = "none");
+
+  // Проверка основных полей если чекбокс НЕ отмечен
+  if (!alreadyDone.checked) {
+    const gender = document.getElementById("gender");
+    if (!gender.value) {
+      valid = false;
+      gender.classList.add("input-error");
+      document.getElementById("genderError").style.display = "block";
+    }
+
+    const age = document.getElementById("age");
+    if (!age.value || age.value < 14 || age.value > 99) {
+      valid = false;
+      age.classList.add("input-error");
+      document.getElementById("ageError").style.display = "block";
+    }
+
+    const job = document.getElementById("job");
+    if (!job.value.trim()) {
+      valid = false;
+      job.classList.add("input-error");
+      document.getElementById("jobError").style.display = "block";
+    }
+  }
+
+  // Проверка email всегда
+  const email = document.getElementById("email");
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email.value.trim() || !emailPattern.test(email.value)) {
+    valid = false;
+    email.classList.add("input-error");
+    document.getElementById("emailError").style.display = "block";
+  }
+
+  if (valid) {
+    window.location.href = "instruction.html";
+  }
+});
+</script>
 
 </body>
 </html>
