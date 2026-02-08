@@ -210,6 +210,17 @@ form.addEventListener("submit", function(e) {
   }
 
   if (valid) {
+    const Data = {
+    email: email.value,
+    gender: document.getElementById("gender").value,
+    age: document.getElementById("age").value,
+    job: document.getElementById("job").value,
+    timestamp: new Date().toISOString(),
+    object1Data: null,
+    object2Data: null };
+
+    localStorage.setItem("Data", JSON.stringify(Data));
+
     window.location.href = "instruction.html";
   }
 });
