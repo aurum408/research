@@ -124,6 +124,19 @@ input, select {
 
     <!-- Основные поля анкеты -->
     <div id="mainFields">
+
+      <label> Пожалуйста, укажите, к какой из категорий вы относитесь на данный момент </label>
+
+      <select id="group" name="group" required>
+
+      <option value="">Выберите</option>
+      <option value="student"> Я студент(ка) и участвую или в ближайшее время планирую участие
+        в программе академического обмена </option>
+      <option value="adult"> Я нахожусь в процессе смены профессиональной деятельности </option>
+      <option value="other"> Я не отношусь ни к одной из указанных категорий
+        (участие в качестве тестировщика) </option>
+      </select>
+
       <label for="gender">Пол</label>
       <select id="gender" name="gender">
         <option value="">Выберите</option>
@@ -133,8 +146,8 @@ input, select {
       <div class="error-message" id="genderError">Пожалуйста, выберите пол.</div>
 
       <label for="age">Возраст</label>
-      <input type="number" id="age" name="age" min="14" max="99">
-      <div class="error-message" id="ageError">Пожалуйста, укажите возраст от 14 до 99.</div>
+      <input type="number" id="age" name="age" min="18" max="99">
+      <div class="error-message" id="ageError">Пожалуйста, укажите возраст от 18 до 99.</div>
 
       <label for="job">Профессия</label>
       <input type="text" id="job" name="job">
@@ -216,6 +229,8 @@ form.addEventListener("submit", function(e) {
     age: document.getElementById("age").value,
     job: document.getElementById("job").value,
     timestamp: new Date().toISOString(),
+    group: document.getElementById("group").value,
+    alreadyDone: alreadyDone.checked,
     object1Data: null,
     object2Data: null };
 
